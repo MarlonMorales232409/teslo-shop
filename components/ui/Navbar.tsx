@@ -7,7 +7,7 @@ export const Navbar = () => {
         <AppBar>
             <Toolbar>
                 <NextLink href={'/'} passHref>
-                    <Link display='flex' alignItems='center'>
+                    <Link display='flex' alignItems='center' color={"black"}>
                         <Typography variant="h6">Teslo |</Typography>
                         <Typography sx={{ ml: 0.5 }}>Shop</Typography>
                     </Link>
@@ -15,7 +15,7 @@ export const Navbar = () => {
 
                 <Box flex={1} />
 
-                <Box>
+                <Box sx={{ display: { xs: "none", sm: "block" } }}>
                     <NextLink href={'/category/man'} passHref>
                         <Link>
                             <Button>Mans</Button>
