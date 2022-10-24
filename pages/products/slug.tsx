@@ -1,6 +1,8 @@
 import { Box, Button, Chip, Grid, Typography } from '@mui/material';
 import { NextPage } from 'next';
 import { ShopLayout } from '../../components/layout/ShopLayout';
+import { SizeSelector } from '../../components/products';
+import { ItemCounter, SlideShow } from '../../components/ui';
 import { initialData } from '../../database/products';
 
 
@@ -14,7 +16,7 @@ const ProductPage: NextPage = () => {
             <Grid container spacing={3}>
 
                 <Grid item xs={12} sm={7}>
-                    {/* Slider */}
+                    <SlideShow images={product.images} />
                 </Grid>
 
                 <Grid item xs={12} sm={5}>
@@ -26,7 +28,8 @@ const ProductPage: NextPage = () => {
 
                         <Box sx={{ my: 2 }}>
                             <Typography variant='subtitle2'>Amount</Typography>
-                            {/* Item Counter */}
+                            <ItemCounter />
+                            <SizeSelector sizes={product.sizes} selectedSize={product.sizes[0]} />
                         </Box>
 
                         {/* Add to the cart */}
