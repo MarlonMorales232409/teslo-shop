@@ -15,9 +15,6 @@ interface Props {
 
 const HomePage: NextPage<Props> = ({ products, areThereProducts, query }) => {
 
-    const capitalize = (string: string) => {
-        return string.charAt(0).toUpperCase() + string.slice(1);
-    }
 
     return (
         <ShopLayout title='Teslo Shop - Search Page' pageDescription={`match with product search term: ${query}}`}>
@@ -27,14 +24,14 @@ const HomePage: NextPage<Props> = ({ products, areThereProducts, query }) => {
                     ? (
                         <Box display="flex">
                             <Typography variant='h2' sx={{ mb: 1 }}>Product that match with:</Typography>
-                            <Typography variant='h2' color={"secondary"} sx={{ ml: 1 }}>{capitalize(query)}</Typography>
+                            <Typography variant='h2' color={"secondary"} sx={{ ml: 1, textTransform: "capitalize" }}>{query}</Typography>
                         </Box>
                     )
                     : (
 
                         <Box display="flex">
                             <Typography variant='h2' sx={{ mb: 1 }}>There is not any product that match with:</Typography>
-                            <Typography variant='h2' color={"secondary"} sx={{ ml: 1 }}>{capitalize(query)}</Typography>
+                            <Typography variant='h2' color={"secondary"} sx={{ ml: 1, textTransform: "capitalize" }}>{query}</Typography>
                         </Box>
 
                     )
