@@ -1,12 +1,13 @@
 import { Box, Button, Chip, Grid, Typography } from '@mui/material';
-import { GetServerSideProps, GetStaticPaths, GetStaticProps, NextPage } from 'next';
+import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import { ShopLayout } from '../../components/layout/ShopLayout';
 import { SizeSelector } from '../../components/products';
 import { ItemCounter, SlideShow } from '../../components/ui';
 import { dbProduct } from '../../database';
-import { useProduct } from '../../hooks';
 import { IProduct } from '../../interfaces';
-import { getProductBySlug, getAllSlugs } from '../../database/dbProducts';
+import { ICartProduct } from '../../interfaces/cart';
+import { useState } from 'react';
+import { IValidSize } from '../../interfaces/products';
 
 
 
@@ -14,9 +15,33 @@ interface Props {
     product: IProduct
 }
 
-
 const ProductPage: NextPage<Props> = ({ product }) => {
 
+    const [tempCartProduct, setTempCartProduct] = useState<ICartProduct>({
+        _id: product._id,
+        image: product.images[0],
+        price: product.price,
+        size: undefined,
+        slug: product.slug,
+        title: product.title,
+        gender: product.gender,
+        quantity: 1,
+    })
+
+    const onSelectedSize = (size: IValidSize) => {
+        setTempCartProduct((currentProduct) => (
+            { ...currentProduct, size }
+        ))
+    }
+
+    // const [updatedQuantity, setUpdatedQuantity] = useState(0)
+
+    const updatedQuantity = (quantity: number) => {
+        console.log(quantity)
+        setTempCartProduct((currentProduct) => (
+            { ...currentProduct, quantity }
+        ))
+    }
 
     return (
         <ShopLayout title={product.title} pageDescription={`Description about the product ${product.slug}`}>
@@ -35,17 +60,32 @@ const ProductPage: NextPage<Props> = ({ product }) => {
 
                         <Box sx={{ my: 2 }}>
                             <Typography variant='subtitle2'>Amount</Typography>
-                            <ItemCounter />
-                            <SizeSelector sizes={product.sizes} selectedSize={product.sizes[0]} />
+                            <ItemCounter
+                                currentValue={tempCartProduct.quantity}
+                                updatedQuantity={updatedQuantity}
+                                maxValue={product.inStock}
+                            />
+                            <SizeSelector
+                                sizes={product.sizes}
+                                selectedSize={tempCartProduct.size}
+                                onSelectedSize={(size) => onSelectedSize(size)}
+
+                            />
                         </Box>
 
                         {/* Add to the cart */}
+                        {
+                            product.inStock === 0 ? (
+                                <Chip color="error" variant="outlined" label="Sold Out" />
+                            ) : (
+                                <Button color="secondary" className="circular-btn">
+                                    {
+                                        tempCartProduct.size ? 'Add to Cart' : 'Select a size'
+                                    }
+                                </Button>
 
-                        <Button color="secondary" className="circular-btn">
-                            Add to the cart
-                        </Button>
-
-                        {/* <Chip color="error" variant="outlined" label="Sold Out" /> */}
+                            )
+                        }
 
                         <Box sx={{ my: 3 }}>
                             <Typography variant="subtitle2">Description</Typography>
@@ -62,31 +102,6 @@ const ProductPage: NextPage<Props> = ({ product }) => {
     )
 }
 
-
-
-// export const getServerSideProps: GetServerSideProps = async ({ params }) => {
-
-//     const { slug = "" } = params as { slug: string }
-
-//     const product = await dbProduct.getProductBySlug(slug);
-
-//     if (!product) {
-//         return {
-//             redirect: {
-//                 destination: "/",
-//                 permanent: false
-//             }
-//         }
-//     }
-
-
-
-//     return {
-//         props: {
-//             product
-//         },
-//     }
-// }
 
 
 export const getStaticPaths = async () => {

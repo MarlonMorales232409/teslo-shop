@@ -2,11 +2,11 @@ import { IValidSize, IValidType } from "./";
 
 export interface ICartProduct {
 	_id: string;
-	inStock: number;
+	image: string;
 	price: number;
-	size: IValidSize;
+	size?: IValidSize;
 	slug: string;
 	title: string;
-	type: IValidType;
 	gender: "men" | "women" | "kid" | "unisex";
+	quantity: number;
 }
