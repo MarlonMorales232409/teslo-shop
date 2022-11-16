@@ -8,7 +8,7 @@ type CartActionType =
 			type: "[Cart] - Load Cart from cockies | storage";
 			payload: ICartProduct[];
 	  }
-	| { type: "[Cart] - Add Product"; payload: ICartProduct };
+	| { type: "[Cart] - Update Product in Cart"; payload: ICartProduct[] };
 
 export const cartReducer = (
 	state: CartState,
@@ -18,6 +18,13 @@ export const cartReducer = (
 		case "[Cart] - Load Cart from cockies | storage":
 			return {
 				...state,
+				cart: [...action.payload],
+			};
+
+		case "[Cart] - Update Product in Cart":
+			return {
+				...state,
+				cart: [...action.payload],
 			};
 
 		default:

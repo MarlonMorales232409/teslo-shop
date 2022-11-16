@@ -6,8 +6,9 @@ import { ItemCounter, SlideShow } from '../../components/ui';
 import { dbProduct } from '../../database';
 import { IProduct } from '../../interfaces';
 import { ICartProduct } from '../../interfaces/cart';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { IValidSize } from '../../interfaces/products';
+import { CartContext } from '../../context';
 
 
 
@@ -16,6 +17,8 @@ interface Props {
 }
 
 const ProductPage: NextPage<Props> = ({ product }) => {
+
+    const { addProductToCart } = useContext(CartContext)
 
     const [tempCartProduct, setTempCartProduct] = useState<ICartProduct>({
         _id: product._id,
@@ -37,10 +40,16 @@ const ProductPage: NextPage<Props> = ({ product }) => {
     // const [updatedQuantity, setUpdatedQuantity] = useState(0)
 
     const updatedQuantity = (quantity: number) => {
-        console.log(quantity)
         setTempCartProduct((currentProduct) => (
             { ...currentProduct, quantity }
         ))
+    }
+
+    const onAddtoCart = () => {
+        if (!tempCartProduct.size) return
+
+        addProductToCart(tempCartProduct)
+
     }
 
     return (
@@ -78,7 +87,7 @@ const ProductPage: NextPage<Props> = ({ product }) => {
                             product.inStock === 0 ? (
                                 <Chip color="error" variant="outlined" label="Sold Out" />
                             ) : (
-                                <Button color="secondary" className="circular-btn">
+                                <Button color="secondary" className="circular-btn" onClick={onAddtoCart}>
                                     {
                                         tempCartProduct.size ? 'Add to Cart' : 'Select a size'
                                     }
