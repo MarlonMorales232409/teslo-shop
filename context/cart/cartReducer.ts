@@ -16,6 +16,7 @@ export const cartReducer = (
 ): CartState => {
 	switch (action.type) {
 		case "[Cart] - Load Cart from cockies | storage":
+			console.log("payload aqui ", action.payload)
 			return {
 				...state,
 				cart: [...action.payload],

@@ -9,4 +9,5 @@ export interface ICartProduct {
 	title: string;
 	gender: "men" | "women" | "kid" | "unisex";
 	quantity: number;
+	inStock: number
 }

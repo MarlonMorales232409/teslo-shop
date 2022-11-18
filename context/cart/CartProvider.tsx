@@ -2,7 +2,7 @@ import { FC, useEffect, useReducer } from 'react'
 import { CartContext } from './'
 import { cartReducer } from './cartReducer';
 import { ICartProduct } from '../../interfaces';
-import Cookie from "js-cookie"
+import Cookie from 'js-cookie'
 
 export interface CartState {
     cart: ICartProduct[],
@@ -21,26 +21,27 @@ export const CartProvider: FC<Props> = ({ children }) => {
 
     useEffect(() => {
         try {
-            const productInCookie = Cookie.get("cart") ? JSON.parse(Cookie.get("cart")!) : []
-            dispatch({ type: "[Cart] - Load Cart from cockies | storage", payload: productInCookie })
-
+            console.info(state.cart)
+            const productInCookie = Cookie.get('cart') ? JSON.parse( Cookie.get('cart')! ) : []
+            dispatch({ type: '[Cart] - Load Cart from cockies | storage', payload: productInCookie })
+            console.info(state.cart)
         } catch (error) {
-            dispatch({ type: "[Cart] - Load Cart from cockies | storage", payload: [] })
+            dispatch({ type: '[Cart] - Load Cart from cockies | storage', payload: [] })
         }
     }, [])
 
     useEffect(() => {
-        Cookie.set('cart', JSON.stringify(state.cart))
+        Cookie.set('cart', JSON.stringify(state.cart), {sameSite: 'None', secure: true})
     }, [state.cart])
 
     const addProductToCart = (product: ICartProduct) => {
 
 
         const productInCart = state.cart.some(p => p._id === product._id)
-        if (!productInCart) return dispatch({ type: "[Cart] - Update Product in Cart", payload: [...state.cart, product] })
+        if (!productInCart) return dispatch({ type: '[Cart] - Update Product in Cart', payload: [...state.cart, product] })
 
         const productInCartButWithDiferentSize = state.cart.some(p => p._id === product._id && p.size === product.size)
-        if (!productInCartButWithDiferentSize) return dispatch({ type: "[Cart] - Update Product in Cart", payload: [...state.cart, product] })
+        if (!productInCartButWithDiferentSize) return dispatch({ type: '[Cart] - Update Product in Cart', payload: [...state.cart, product] })
 
 
         const updatedProduct = state.cart.map(p => {
@@ -52,7 +53,7 @@ export const CartProvider: FC<Props> = ({ children }) => {
             return p
         })
 
-        dispatch({ type: "[Cart] - Update Product in Cart", payload: updatedProduct })
+        dispatch({ type: '[Cart] - Update Product in Cart', payload: updatedProduct })
 
     }
 

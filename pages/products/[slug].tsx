@@ -9,6 +9,7 @@ import { ICartProduct } from '../../interfaces/cart';
 import { useContext, useState } from 'react';
 import { IValidSize } from '../../interfaces/products';
 import { CartContext } from '../../context';
+import { useRouter } from 'next/router';
 
 
 
@@ -19,6 +20,7 @@ interface Props {
 const ProductPage: NextPage<Props> = ({ product }) => {
 
     const { addProductToCart } = useContext(CartContext)
+    const router = useRouter()
 
     const [tempCartProduct, setTempCartProduct] = useState<ICartProduct>({
         _id: product._id,
@@ -29,6 +31,7 @@ const ProductPage: NextPage<Props> = ({ product }) => {
         title: product.title,
         gender: product.gender,
         quantity: 1,
+        inStock: product.inStock
     })
 
     const onSelectedSize = (size: IValidSize) => {
@@ -49,6 +52,8 @@ const ProductPage: NextPage<Props> = ({ product }) => {
         if (!tempCartProduct.size) return
 
         addProductToCart(tempCartProduct)
+
+        router.push('/cart')
 
     }
 
