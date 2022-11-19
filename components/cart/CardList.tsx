@@ -4,6 +4,7 @@ import { initialData } from "../../database/products"
 import { ItemCounter } from '../ui/ItemCounter';
 import { FC, useContext, useState } from "react";
 import { CartContext } from "../../context";
+import { ICartProduct } from "../../interfaces";
 
 
 interface Props {
@@ -12,10 +13,12 @@ interface Props {
 
 export const CardList: FC<Props> = ({ editable = false }) => {
 
-    const { cart: productsInCart  } = useContext(CartContext)
+    const { cart: productsInCart, updateCartQuantity, removeCartProduct  } = useContext(CartContext)
     
-    const updatedQuantity = (currentValue: number)=> {
-
+    const updatedQuantityInCart = (product:ICartProduct, newQuantityValue: number )=> {
+        product.quantity = newQuantityValue;
+        if(product.quantity === 0) product.quantity = 1
+        updateCartQuantity(product)
     }
 
     return (
@@ -25,7 +28,7 @@ export const CardList: FC<Props> = ({ editable = false }) => {
                     <Grid key={product.slug + product.size} container spacing={2} >
 
                         <Grid item xs={3} mb={1} >
-                            <NextLink href={`product/${product.slug}`} passHref>
+                            <NextLink href={`products/${product.slug}`} passHref>
                                 <Link>
                                     <CardActionArea>
                                         <CardMedia
@@ -48,7 +51,7 @@ export const CardList: FC<Props> = ({ editable = false }) => {
                                         ? (
                                         <ItemCounter 
                                             currentValue={product.quantity} 
-                                            updatedQuantity={()=> {}}
+                                            updatedQuantity={(value)=> updatedQuantityInCart(product,value)}
                                             maxValue={product.inStock} 
                                             />
                                         )
@@ -64,7 +67,14 @@ export const CardList: FC<Props> = ({ editable = false }) => {
                         <Grid item xs={2} display="flex" flexDirection="column" alignItems="center" >
                             <Typography variant="subtitle1" >{`$${product.price}`}</Typography>
                             {
-                                editable && (<Button variant="text" color="secondary">Remove</Button>)
+                                editable && (
+                                    <Button 
+                                        variant="text" 
+                                        color="secondary"
+                                        onClick={()=> removeCartProduct(product)}
+                                    >
+                                        Remove
+                                    </Button>)
                             }
 
                         </Grid>
