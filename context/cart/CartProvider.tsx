@@ -6,11 +6,21 @@ import Cookie from 'js-cookie'
 
 export interface CartState {
     cart: ICartProduct[],
+    numberOfItem: number;
+    subTotal: number;
+    tax: number;
+    total: number;
 }
 
 const CART_INITIAL_STATE: CartState = {
     cart: [],
+    numberOfItem:0,
+    subTotal:0,
+    tax:0,
+    total:0,
 }
+
+
 
 interface Props {
     children: React.ReactNode,
@@ -30,7 +40,7 @@ export const CartProvider: FC<Props> = ({ children }) => {
 
     
     useEffect(() => {
-      Cookie.set('cart', JSON.stringify( state.cart ));
+      Cookie.set('cart', JSON.stringify( state.cart ), { sameSite: 'strict' });
     }, [state.cart]);
 
 
@@ -46,8 +56,13 @@ export const CartProvider: FC<Props> = ({ children }) => {
             total: subTotal * (taxRate + 1)
         }
 
-        console.log(orderSumary)
+        dispatch({type: "[CART] - Update Order Summary", payload: orderSumary})
     }, [state.cart])
+
+
+
+
+    // Methods
     
     const addProductToCart = (product: ICartProduct) => {
 
@@ -87,6 +102,7 @@ export const CartProvider: FC<Props> = ({ children }) => {
     return (
         <CartContext.Provider value={{
             ...state,
+            // methods
             addProductToCart,
             updateCartQuantity,
             removeCartProduct,

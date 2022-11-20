@@ -11,6 +11,12 @@ type CartActionType =
 	| { type: "[Cart] - Update Product in Cart"; payload: ICartProduct[] }
 	| { type: "[CART] - Change Cart Quantity"; payload: ICartProduct }
 	| { type: "[CART] - Remove Product in Cart"; payload: ICartProduct[] }
+	| { type: "[CART] - Update Order Summary"; payload: {
+		numberOfItem: number;
+    	subTotal: number;
+    	tax: number;
+    	total: number;
+	} }
 	
 
 export const cartReducer = (
@@ -19,7 +25,6 @@ export const cartReducer = (
 ): CartState => {
 	switch (action.type) {
 		case "[Cart] - Load Cart from cockies | storage":
-			console.log("payload aqui ", action.payload)
 			return {
 				...state,
 				cart: [...action.payload],
@@ -44,6 +49,12 @@ export const cartReducer = (
 			return {
 				...state,
 				cart: [...action.payload]
+			}
+
+		case "[CART] - Update Order Summary":
+			return {
+				...state,
+				...action.payload
 			}
 
 		default:
