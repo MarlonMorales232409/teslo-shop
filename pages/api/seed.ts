@@ -1,9 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { Product } from "../../models";
+import { Product, User } from "../../models";
 import { db, seedDatabase } from "./../../database";
 
 type Data = {
 	message: string;
+	errorMessage?: string,
 };
 
 export default async function handler(
@@ -19,13 +20,18 @@ export default async function handler(
 	try {
 		await db.connect();
 
+		await User.deleteMany();
+		await User.insertMany(seedDatabase.initialData.users)
+
 		await Product.deleteMany();
 		await Product.insertMany(seedDatabase.initialData.products);
 
 		await db.disconnect();
 	} catch (error) {
+		const errorMessage = JSON.stringify(error)
 		res.status(401).json({
 			message: "Something went wrong trying to connect with the database",
+			errorMessage,
 		});
 	}
 
