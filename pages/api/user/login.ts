@@ -15,7 +15,7 @@ type Data =
     }
 }
 
-export function handler(request: NextApiRequest, response: NextApiResponse){
+export default function handler(request: NextApiRequest, response: NextApiResponse){
 
     switch (request.method) {
         case "POST":
