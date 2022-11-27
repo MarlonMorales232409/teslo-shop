@@ -1,9 +1,9 @@
 export interface IUser {
     _id: string;
-    name: String,
-    email: String,
-    password?: String,
-    role: String,
+    name: string,
+    email: string,
+    password?: string,
+    role: string,
     createAt?: string;
 	updatedAt?: string;
 }
