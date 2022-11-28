@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { db } from "../../../database";
 import { User } from "../../../models";
 import bcrypt from "bcryptjs"
+import { jwt } from "../../../utils";
 
 
 type Data = 
@@ -41,10 +42,12 @@ const loginUser = async (request: NextApiRequest, response: NextApiResponse<any>
         return response.status(400).json('Email or Password does not exist - Password')
 
 
-    const { name, role } = user    
+    const { name, role, _id } = user    
+
+    const token = jwt.signToken(_id, email)
 
     return response.status(200).json({
-        token: 'No token yet',
+        token,
         user: {
             name, email, role
         }
