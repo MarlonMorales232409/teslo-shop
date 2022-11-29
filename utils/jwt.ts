@@ -5,7 +5,7 @@ export const signToken = (id: string, email: string)=> {
          throw new Error("Error loading secret seed, check envirioment variables")
     }
 
-    jwt.sign(
+    return jwt.sign(
         { id, email },
         process.env.JWT_SECRET_SEED,
         { expiresIn: '30d' }
