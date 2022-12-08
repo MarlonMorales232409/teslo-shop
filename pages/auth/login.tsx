@@ -1,6 +1,9 @@
-import { Box, Button, Grid, Link, TextField, Typography } from '@mui/material'
+import { ErrorOutline } from '@mui/icons-material';
+import { Box, Button, Chip, Grid, Link, TextField, Typography } from '@mui/material'
 import NextLink from 'next/link'
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { tesloApi } from '../../api';
 import { AuthLayout } from '../../components/layout'
 import { validation } from '../../utils';
 
@@ -11,11 +14,25 @@ type FormData = {
 
 const login = () => {
 
+    const [showError, setShowError] = useState(false)
     
     const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
 
-    const onLoginUser = (data: FormData)=> {
-        console.log({data})
+    const onLoginUser = async (data: FormData)=> {
+        try {
+
+            const { email, password } = data
+
+            const user = await tesloApi.post('/user/login', { email, password })
+
+            console.log(user)
+
+        } catch (error) {
+            setShowError(true)
+            console.log('Something went wrong')
+            setTimeout(() => setShowError(false), 3000);
+
+        }
     }
 
     return (
@@ -25,6 +42,13 @@ const login = () => {
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
                         <Typography variant='h1' component={"h1"}>Login</Typography>
+                        <Chip 
+                            label="We don't recognize that user/password"
+                            color="error"
+                            icon={ <ErrorOutline /> }
+                            className="fadeIn"
+                            sx={{ m: "8px 0", display: showError ? "flex" : "none" }}    
+                        />
                     </Grid>
                     <Grid item xs={12}>
                         <TextField 
