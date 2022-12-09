@@ -4,10 +4,7 @@ import { ICartProduct } from "../../interfaces/cart";
 // Always define what actions will be used by my reducer
 
 type CartActionType =
-	| {
-			type: "[Cart] - Load Cart from cockies | storage";
-			payload: ICartProduct[];
-	  }
+	| { type: "[Cart] - Load Cart from cockies | storage"; payload: ICartProduct[]; }
 	| { type: "[Cart] - Update Product in Cart"; payload: ICartProduct[] }
 	| { type: "[CART] - Change Cart Quantity"; payload: ICartProduct }
 	| { type: "[CART] - Remove Product in Cart"; payload: ICartProduct[] }
@@ -19,11 +16,10 @@ type CartActionType =
 	} }
 	
 
-export const cartReducer = (
-	state: CartState,
-	action: CartActionType
-): CartState => {
+export const cartReducer = ( state: CartState, action: CartActionType ): CartState => {
+
 	switch (action.type) {
+		
 		case "[Cart] - Load Cart from cockies | storage":
 			return {
 				...state,

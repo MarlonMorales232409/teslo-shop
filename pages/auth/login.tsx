@@ -1,11 +1,13 @@
+import { AuthLayout } from '../../components/layout'
+import { useContext, useState } from 'react';
+import NextLink from 'next/link'
+import { useRouter } from 'next/router';
+import { useForm } from 'react-hook-form';
+import { AuthContext } from '../../context/auth';
+import { validation } from '../../utils';
+
 import { ErrorOutline } from '@mui/icons-material';
 import { Box, Button, Chip, Grid, Link, TextField, Typography } from '@mui/material'
-import NextLink from 'next/link'
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { tesloApi } from '../../api';
-import { AuthLayout } from '../../components/layout'
-import { validation } from '../../utils';
 
 type FormData = {
     email: string,
@@ -14,22 +16,33 @@ type FormData = {
 
 const login = () => {
 
+    const { loginUser } = useContext(AuthContext)
+
+    const route = useRouter()
+
     const [showError, setShowError] = useState(false)
     
     const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
 
     const onLoginUser = async (data: FormData)=> {
+
         try {
 
             const { email, password } = data
 
-            const user = await tesloApi.post('/user/login', { email, password })
+            const isValidUser = await loginUser(email, password)
 
-            console.log(user)
+            if( !isValidUser ) {
+                setShowError(true)
+                setTimeout(() => setShowError(false), 3000);
+                return
+            }
+
+            return route.replace('/')
 
         } catch (error) {
+            
             setShowError(true)
-            console.log('Something went wrong')
             setTimeout(() => setShowError(false), 3000);
 
         }

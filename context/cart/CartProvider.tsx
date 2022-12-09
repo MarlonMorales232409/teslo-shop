@@ -27,26 +27,37 @@ interface Props {
 }
 export const CartProvider: FC<Props> = ({ children }) => {
 
-    const [state, dispatch] = useReducer(cartReducer, CART_INITIAL_STATE)
+    const [state, dispatch] = useReducer( cartReducer, CART_INITIAL_STATE )
 
     useEffect(() => {
+
         try {
+
             const cookieProducts = Cookie.get('cart') ? JSON.parse( Cookie.get('cart')! ): []
             dispatch({ type: "[Cart] - Load Cart from cockies | storage", payload: cookieProducts });
+
         } catch (error) {
+
             dispatch({ type: "[Cart] - Load Cart from cockies | storage", payload: [] });
+
         }
+
     }, []);
 
     
     useEffect(() => {
+
       Cookie.set('cart', JSON.stringify( state.cart ), { sameSite: 'strict' });
+
     }, [state.cart]);
 
 
     useEffect(() => {
+
         const numberOfItem = state.cart.reduce((prev, current)=> current.quantity + prev,0)
+
         const subTotal = state.cart.reduce((prev, current)=> (current.price * current.quantity) + prev,0)
+
         const taxRate = Number(process.env.NEXT_PUBLIC_TAX_RATE)
 
         const orderSumary = {
@@ -57,6 +68,7 @@ export const CartProvider: FC<Props> = ({ children }) => {
         }
 
         dispatch({type: "[CART] - Update Order Summary", payload: orderSumary})
+
     }, [state.cart])
 
 
@@ -87,14 +99,17 @@ export const CartProvider: FC<Props> = ({ children }) => {
 
     }
 
+
+
     const updateCartQuantity = (product: ICartProduct)=> {
+
         dispatch({type:"[CART] - Change Cart Quantity", payload:product })
+
     }
 
     const removeCartProduct = (product: ICartProduct)=> {
-    const productRemoved = state.cart.filter(p => !(p._id === product._id && p.size === product.size))
 
-    console.log(productRemoved)
+    const productRemoved = state.cart.filter(p => !(p._id === product._id && p.size === product.size))
 
         dispatch({type: "[CART] - Remove Product in Cart", payload:productRemoved})
     }

@@ -1,10 +1,12 @@
 import { ErrorOutline } from '@mui/icons-material';
 import { Box, Button, Chip, Grid, Link, TextField, Typography } from '@mui/material'
 import NextLink from 'next/link'
-import { useState } from 'react';
+import { useRouter } from 'next/router';
+import { useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { tesloApi } from '../../api';
 import { AuthLayout } from '../../components/layout'
+import { AuthContext } from '../../context/auth';
 import { validation } from '../../utils';
 
 type FormData = {
@@ -15,7 +17,12 @@ type FormData = {
 
 const register = () => {
 
-    const [showError, setShowError] = useState(false)
+    const router = useRouter()
+
+    const { registerUser } = useContext(AuthContext)
+
+    const [ showError, setShowError ] = useState(false)
+    const [ errorMessage, setErrorMessage ] = useState('')
 
     const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
 
@@ -24,15 +31,20 @@ const register = () => {
 
             const { name, email, password } = data
 
-            const user = await tesloApi.post('/user/register', { name, email, password })
+            const { hasError, message } = await registerUser(name, email, password)
 
-            console.log(user)
+            if(hasError){
+                setShowError(true)
+                setErrorMessage(message!)
+                setTimeout(() => setShowError(false), 3000);
+                return
+            }
+
+            return router.replace('/')
+            
 
         } catch (error) {
-            setShowError(true)
-            console.log('Something went wrong')
-            setTimeout(() => setShowError(false), 3000);
-
+            return
         }
     }
 
