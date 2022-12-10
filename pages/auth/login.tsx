@@ -1,5 +1,5 @@
 import { AuthLayout } from '../../components/layout'
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import NextLink from 'next/link'
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
@@ -24,7 +24,7 @@ const login = () => {
     
     const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
 
-    
+
     const onLoginUser = async (data: FormData)=> {
 
         try {
@@ -96,7 +96,7 @@ const login = () => {
                         <Button type='submit' className="circular-btn" color="secondary" size='large' fullWidth>Login</Button>
                     </Grid>
                     <Grid item xs={12}>
-                        <NextLink href={`/auth/register?p=${router.query.p}`} passHref>
+                        <NextLink href={ router.query.p ? `/auth/register?p=${router.query.p}` : 'auth/register' } passHref>
                             <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                                 <span>{"Don't have an account?"}</span>
                                 <Link underline='always' color="secondary" sx={{ cursor: "pointer" }}>

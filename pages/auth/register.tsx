@@ -118,7 +118,7 @@ const register = () => {
                     </Grid>
                     
                     <Grid item xs={12}>
-                        <NextLink href={`/auth/login?p=${router.query.p}`} passHref>
+                        <NextLink href={ router.query.p ? `/auth/login?p=${router.query.p}` : '/auth/login'} passHref>
                             <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                                 <span>{"Already have an account?"}</span>
                                 <Link underline='always' color="secondary" sx={{ cursor: "pointer" }}>
