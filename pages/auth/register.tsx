@@ -40,7 +40,8 @@ const register = () => {
                 return
             }
 
-            return router.replace('/')
+            const destination = router.query.p?.toString() || '/'
+            router.replace(destination)
             
 
         } catch (error) {
@@ -117,7 +118,7 @@ const register = () => {
                     </Grid>
                     
                     <Grid item xs={12}>
-                        <NextLink href={"/auth/login"} passHref>
+                        <NextLink href={`/auth/login?p=${router.query.p}`} passHref>
                             <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                                 <span>{"Already have an account?"}</span>
                                 <Link underline='always' color="secondary" sx={{ cursor: "pointer" }}>

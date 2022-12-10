@@ -1,5 +1,5 @@
 import { AuthLayout } from '../../components/layout'
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import NextLink from 'next/link'
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
@@ -18,12 +18,13 @@ const login = () => {
 
     const { loginUser } = useContext(AuthContext)
 
-    const route = useRouter()
+    const router = useRouter()
 
     const [showError, setShowError] = useState(false)
     
     const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
 
+    
     const onLoginUser = async (data: FormData)=> {
 
         try {
@@ -38,7 +39,9 @@ const login = () => {
                 return
             }
 
-            return route.replace('/')
+            const destination = router.query.p?.toString() || '/'
+            return router.replace(destination)
+
 
         } catch (error) {
             
@@ -93,7 +96,7 @@ const login = () => {
                         <Button type='submit' className="circular-btn" color="secondary" size='large' fullWidth>Login</Button>
                     </Grid>
                     <Grid item xs={12}>
-                        <NextLink href={"/auth/register"} passHref>
+                        <NextLink href={`/auth/register?p=${router.query.p}`} passHref>
                             <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                                 <span>{"Don't have an account?"}</span>
                                 <Link underline='always' color="secondary" sx={{ cursor: "pointer" }}>
