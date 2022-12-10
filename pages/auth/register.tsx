@@ -15,7 +15,7 @@ type FormData = {
     password: string,
   };
 
-const register = () => {
+const Register = () => {
 
     const router = useRouter()
 
@@ -136,4 +136,4 @@ const register = () => {
     )
 }
 
-export default register
+export default Register

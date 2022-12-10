@@ -14,7 +14,7 @@ type FormData = {
     password: string,
   };
 
-const login = () => {
+const Login = () => {
 
     const { loginUser } = useContext(AuthContext)
 
@@ -114,4 +114,4 @@ const login = () => {
     )
 }
 
-export default login
+export default Login
