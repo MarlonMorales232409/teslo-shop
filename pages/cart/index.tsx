@@ -8,15 +8,19 @@ import { CartContext } from '../../context';
 
 const CartPage = () => {
 
-    const {cart} = useContext(CartContext)
+    const { cart, isLoaded } = useContext(CartContext)
 
     const router = useRouter()
 
     useEffect(() => {
-        if(cart.length === 0) {
-            router.push("/cart/empty")
+        if(!isLoaded || cart.length === 0) {
+            router.replace("/cart/empty")
         }
-    }, [])
+    }, [isLoaded, cart, router])
+
+    if(!isLoaded || cart.length === 0){
+        return (<></>)
+    }
     
 
     return (
@@ -36,7 +40,14 @@ const CartPage = () => {
                             <OrderSumary />
 
                             <Box sx={{ mt: 3 }}>
-                                <Button color={"secondary"} className="circular-btn" fullWidth>Checkout</Button>
+                                <Button 
+                                color={"secondary"} 
+                                className="circular-btn" 
+                                fullWidth
+                                href='/checkout/address'
+                            >
+                                Checkout
+                                </Button>
                             </Box>
                         </CardContent>
                     </Card>
